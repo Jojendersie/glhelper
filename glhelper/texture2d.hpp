@@ -23,7 +23,7 @@ namespace gl
 
 		Texture2D(Texture2D&& _moved) : Texture(std::move(_moved)) {}
 
-#ifdef TEXTURE2D_FROMFILE_STBI
+#ifdef TEXTURE_FROMFILE_STBI
 		/// \brief Loads texture from file using stb_image
 		///
 		/// Uses given to create an object if file loading is successful. Use corresponding deallocator to remove the texture.
