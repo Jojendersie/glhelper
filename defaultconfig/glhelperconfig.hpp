@@ -4,6 +4,10 @@
 #include <string>
 #include <cassert>
 #include <iostream>
+#include <limits>  // for std::numeric_limits in textureview.hpp
+#include <string.h> // for memcmp in samplerobject.h
+#include <vector> // for std::vector in shaderobject.cpp
+#include <algorithm> // for std::count in shaderobject.cpp
 
 // General settings.
 
@@ -27,9 +31,9 @@
 
 
 // Logging
-#define GLHELPER_LOG_ERROR(message)		do { std::cerr << "Error: message (" << __FILE__ << ", (" << __LINE__ << ")" << std::endl; } while(false)
-#define GLHELPER_LOG_WARNING(message)	do { std::cerr << "Warning: message (" << __FILE__ << ", (" << __LINE__ << ")" << std::endl; } while(false)
-#define GLHELPER_LOG_INFO(message)		do { std::clog << "Info: message (" << __FILE__ << ", (" << __LINE__ << ")" << std::endl; } while(false)
+#define GLHELPER_LOG_ERROR(message)		do { std::cerr << "Error: " << message << " (" << __FILE__ << ", (" << __LINE__ << ")" << std::endl; } while(false)
+#define GLHELPER_LOG_WARNING(message)	do { std::cerr << "Warning: " << message << " (" << __FILE__ << ", (" << __LINE__ << ")" << std::endl; } while(false)
+#define GLHELPER_LOG_INFO(message)		do { std::clog << "Info: " << message << " (" << __FILE__ << ", (" << __LINE__ << ")" << std::endl; } while(false)
 
 
 
