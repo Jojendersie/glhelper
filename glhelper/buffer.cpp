@@ -12,25 +12,23 @@ namespace gl
 
 	Buffer::Buffer(GLsizeiptr _sizeInBytes, UsageFlag _usageFlags, const void* _data) :
         m_sizeInBytes(_sizeInBytes),
-		m_usageFlags(_usageFlags),
+		m_usageFlags(_usageFlags & ~EXPLICIT_FLUSH),
 
 		m_mappedDataOffset(0),
 		m_mappedDataSize(0),
 		m_mappedData(nullptr)
     {
-		GLHELPER_ASSERT(static_cast<uint32_t>(m_usageFlags & UsageFlag::EXPLICIT_FLUSH) == 0 || static_cast<uint32_t>(m_usageFlags & UsageFlag::MAP_PERSISTENT) > 0,
-			   "EXPLICIT_FLUSH only valid in combination with PERSISTENT");
 		GLHELPER_ASSERT(static_cast<uint32_t>(m_usageFlags & UsageFlag::MAP_COHERENT) == 0 || static_cast<uint32_t>(m_usageFlags & UsageFlag::MAP_PERSISTENT) > 0,
 			   "MAP_COHERENT only valid in combination with PERSISTENT");
 
 		GL_CALL(glCreateBuffers, 1, &m_bufferObject);
-		GL_CALL(glNamedBufferStorage, m_bufferObject, _sizeInBytes, _data, static_cast<GLbitfield>(_usageFlags));
+		GL_CALL(glNamedBufferStorage, m_bufferObject, _sizeInBytes, _data, static_cast<GLbitfield>(m_usageFlags));
 
 
 		// Persistent buffers do not need to be unmapped!
 		if (any(m_usageFlags & UsageFlag::MAP_PERSISTENT))
 		{
-			MapWriteFlag mapWriteFlags = any(m_usageFlags & UsageFlag::EXPLICIT_FLUSH) ? MapWriteFlag::FLUSH_EXPLICIT : MapWriteFlag::NONE;
+			MapWriteFlag mapWriteFlags = any(_usageFlags & UsageFlag::EXPLICIT_FLUSH) ? MapWriteFlag::FLUSH_EXPLICIT : MapWriteFlag::NONE;
 
 			if (any(m_usageFlags & UsageFlag::MAP_WRITE))
 				Map(MapType::WRITE, mapWriteFlags);
